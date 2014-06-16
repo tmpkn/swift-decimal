@@ -8,20 +8,34 @@
 //  @tmpkn
 //
 
-import Foundation
+import Foundation                           // Needed by String, lrint
+
+
+
 
 struct Decimal: Printable, LogicValue, FloatLiteralConvertible, IntegerLiteralConvertible, StringLiteralConvertible {
-    var maxDigits: Int = 10
-    var decimalPlaces: Int = 2
+    
+    // Stored Properties
+    
+    var valWhole: Int = 0                   // Whole part of the Decimal number
+    var valPart: Int = 0                    // Decimal part of the Decimal number
+    var maxDigits: Int = 10                 // Max. number of digits before decimal point
+    var decimalPlaces: Int = 2              // Max. number of digits after decimal point (aka precision)
+    var isSignMinus: Bool = false           // Negative Value
+    
+    
+    
+    // Computed Variables
+    
     var decimalBase: Int {
-    var retBase = 1
+        var retBase = 1
         for _ in 0..self.decimalPlaces {
             retBase *= 10
         }
         return retBase
     }
     var decimalTreshold: Int {
-    var treshold = 9
+        var treshold = 9
         var multiplier = 1
         for _ in 0..(self.decimalPlaces - 1) {
             multiplier *= 10
@@ -29,12 +43,13 @@ struct Decimal: Printable, LogicValue, FloatLiteralConvertible, IntegerLiteralCo
         }
         return treshold
     }
-    var isSignMinus: Bool = false
     var multiplier: Int {
-    return self.isSignMinus ? -1 : 1
+        return self.isSignMinus ? -1 : 1
     }
-    var valWhole: Int = 0
-    var valPart: Int = 0
+    
+    
+    
+    // Basic Initializers
     
     init (maxDigits: Int, decimalPlaces: Int) {
         self.maxDigits = maxDigits
@@ -105,6 +120,10 @@ struct Decimal: Printable, LogicValue, FloatLiteralConvertible, IntegerLiteralCo
         self.isSignMinus = isSignMinus
     }
     
+    
+    
+    // Numeric Initializers
+    
     init (initialValue: Float, maxDigits: Int = 10, decimalPlaces: Int = 2) {
         self.init(initialValue: Double(initialValue), maxDigits: maxDigits, decimalPlaces: decimalPlaces)
     }
@@ -139,6 +158,10 @@ struct Decimal: Printable, LogicValue, FloatLiteralConvertible, IntegerLiteralCo
         self.init(initialValue: Double(initialValue), maxDigits: maxDigits, decimalPlaces: decimalPlaces)
     }
     
+    
+    
+    // Type Methods
+    
     static func maxParams(_ left: Decimal, _ right: Decimal) -> (Int, Int) {
         let maxDigits = max(left.maxDigits, right.maxDigits)
         let decimalPlaces = max(left.decimalPlaces, right.decimalPlaces)
@@ -152,9 +175,14 @@ struct Decimal: Printable, LogicValue, FloatLiteralConvertible, IntegerLiteralCo
         return (leftNormalized, rightNormalized)
     }
     
+    
+    
+    // Instance Methods
+    
     func toDouble() -> Double {
         return Double(self.multiplier) * (Double(valWhole) + (Double(valPart) / Double(decimalBase)))
     }
+    
     func toString() -> String {
         var retStr = ""
         if self.isSignMinus {
@@ -168,6 +196,7 @@ struct Decimal: Printable, LogicValue, FloatLiteralConvertible, IntegerLiteralCo
         }
         return retStr
     }
+    
     func toDecimal(maxDigits: Int = 10, decimalPlaces: Int = 2) -> Decimal {
         assert(maxDigits >= self.maxDigits, "You cannot reduce the number of digits for Decimal variable")
         var newValuePart = self.valPart
@@ -218,9 +247,12 @@ struct Decimal: Printable, LogicValue, FloatLiteralConvertible, IntegerLiteralCo
         return Decimal(rawInitialValueWhole: abs(tempWhole), rawInitialValuePart: abs(tempPart), isSignMinus: tempIsSignMinus, maxDigits: leftNormalized.maxDigits, decimalPlaces: leftNormalized.decimalPlaces)
     }
     
-    // Protocols
+    
+    
+    // Protocols Compliance
+    
     var description: String {
-    return self.toString()
+        return self.toString()
     }
     
     func getLogicValue() -> Bool  {
@@ -245,6 +277,9 @@ struct Decimal: Printable, LogicValue, FloatLiteralConvertible, IntegerLiteralCo
     
 }
 
+
+
+// Decimal Operators
 
 @infix func + (left: Decimal, right: Decimal) -> Decimal {
     return left.addDecimal(right)
