@@ -34,14 +34,14 @@ struct Decimal {
         }
         return retBase
     }
-    var decimalTreshold: Int {
-        var treshold = 9
+    var decimalThreshold: Int {
+        var threshold = 9
         var multiplier = 1
         for _ in 0..(self.decimalPlaces - 1) {
             multiplier *= 10
-            treshold += 9 * multiplier
+            threshold += 9 * multiplier
         }
-        return treshold
+        return threshold
     }
     var multiplier: Int {
         return self.isSignMinus ? -1 : 1
@@ -217,12 +217,12 @@ struct Decimal {
         var tempIsSignMinus = false
         let (leftNormalized, rightNormalized) = Decimal.normalizePair(self, right)
         var tempPart = (leftNormalized.multiplier * leftNormalized.valPart) + (rightNormalized.multiplier * rightNormalized.valPart)
-        if tempPart < -leftNormalized.decimalTreshold {
+        if tempPart < -leftNormalized.decimalThreshold {
             tempOver = -1
-            tempPart += (leftNormalized.decimalTreshold + 1)
-        } else if tempPart > leftNormalized.decimalTreshold {
+            tempPart += (leftNormalized.decimalThreshold + 1)
+        } else if tempPart > leftNormalized.decimalThreshold {
             tempOver = 1
-            tempPart -= (leftNormalized.decimalTreshold + 1)
+            tempPart -= (leftNormalized.decimalThreshold + 1)
         }
         var tempWhole = (leftNormalized.multiplier * leftNormalized.valWhole) + (rightNormalized.multiplier * rightNormalized.valWhole) + tempOver
         if tempPart == 0 {
@@ -232,7 +232,7 @@ struct Decimal {
                 tempIsSignMinus = true
             } else {
                 tempWhole -= 1
-                tempPart = leftNormalized.decimalTreshold + 1 + tempPart
+                tempPart = leftNormalized.decimalThreshold + 1 + tempPart
                 tempIsSignMinus = false
             }
         } else if (tempPart > 0) {
@@ -240,7 +240,7 @@ struct Decimal {
                 tempIsSignMinus = false
             } else {
                 tempWhole += 1
-                tempPart = -leftNormalized.decimalTreshold - 1 + tempPart
+                tempPart = -leftNormalized.decimalThreshold - 1 + tempPart
                 tempIsSignMinus = true
             }
         }
