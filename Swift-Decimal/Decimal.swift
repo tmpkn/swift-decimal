@@ -13,7 +13,7 @@ import Foundation                           // Needed by String, lrint
 
 
 
-struct Decimal: Printable, LogicValue, FloatLiteralConvertible, IntegerLiteralConvertible, StringLiteralConvertible {
+struct Decimal {
     
     // Stored Properties
     
@@ -247,26 +247,36 @@ struct Decimal: Printable, LogicValue, FloatLiteralConvertible, IntegerLiteralCo
         return Decimal(rawInitialValueWhole: abs(tempWhole), rawInitialValuePart: abs(tempPart), isSignMinus: tempIsSignMinus, maxDigits: leftNormalized.maxDigits, decimalPlaces: leftNormalized.decimalPlaces)
     }
     
-    
-    
-    // Protocols Compliance
-    
+}
+
+
+// Protocols Compliance
+
+extension Decimal: Printable {
     var description: String {
         return self.toString()
     }
-    
+}
+
+extension Decimal: LogicValue {
     func getLogicValue() -> Bool  {
         return (self.valPart != 0) || (self.valWhole != 0)
     }
-    
+}
+
+extension Decimal: FloatLiteralConvertible {
     static func convertFromFloatLiteral(value: FloatLiteralType) -> Decimal {
         return Decimal(initialValue: Double(value))
     }
-    
+}
+
+extension Decimal: IntegerLiteralConvertible {
     static func convertFromIntegerLiteral(value: IntegerLiteralType) -> Decimal {
         return Decimal(initialValue: Double(value))
     }
-    
+}
+
+extension Decimal: StringLiteralConvertible {
     static func convertFromStringLiteral(value: String) -> Decimal {
         return Decimal(initialValue: value)
     }
@@ -274,9 +284,7 @@ struct Decimal: Printable, LogicValue, FloatLiteralConvertible, IntegerLiteralCo
     static func convertFromExtendedGraphemeClusterLiteral(value: String) -> Decimal {
         return Decimal(initialValue: value)
     }
-    
 }
-
 
 
 // Decimal Operators
